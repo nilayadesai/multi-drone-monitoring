@@ -11,7 +11,7 @@ Each alert is printed on the console and logged into a file (log.txt) for later 
 If the user wants to stop the system, pressing Ctrl + C triggers a graceful shutdown: the controller safely terminates all drones, closes the message queue, and finalizes the log.
 
 ## Initial Block diagram
-![image alt]([image_url](https://github.com/nilayadesai/multi-drone-monitoring/blob/f058a2c55f374a13f824dfa686203336f2734a41/initial_block_diagram.png)
+![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/f058a2c55f374a13f824dfa686203336f2734a41/initial_block_diagram.png)
 
 ## System Architecture
 ![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/005e9349e12d632061f08d5facc98a1a7ca986ad/system_architecture.png)
@@ -42,11 +42,13 @@ Generate telemetry (position, target, or intruder detection)
 Monitor battery levels
 Send alerts/messages via message queue (mq_send)
 Optionally, use semaphores to synchronize console output during battery recharge messages
+
 Inter-Process Communication
 Message Queue (/drone_queue): Drones → Controller
 Signals: Controller → Drones (SIGTERM) for shutdown
 File Handling: Controller writes messages to log.txt
 Here is the summary for Process design 
+
 | Process    | Role                         |
 | ---------- | ---------------------------- |
 | Controller | Main process managing system |
@@ -147,6 +149,7 @@ Check the return value of mq_open, mq_send, mq_receive
 Use perror() to print descriptive error messages
 Call exit(1) on critical failures (e.g., controller cannot open queue)
 Example:
+
 mq = mq_open("/drone_queue", O_CREAT | O_RDONLY, 0666, &attr);
 
 if(mq == (mqd_t)-1) {
