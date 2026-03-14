@@ -68,6 +68,7 @@ Using a telemetry thread allows concurrent message handling, making the system r
 Telemetry Thread
 Created in controller.c using pthread_create().
 Function: Continuously read messages from the POSIX message queue (/drone_queue).
+
 Tasks it performs:
 Receive message from a drone (mq_receive)
 Print message on the console
@@ -77,31 +78,19 @@ Spawn drone processes
 Handle shutdown signals (SIGINT)
 Perform other controller tasks
 
-
-             
   ## IPC (Inter-Process Communication) Mapping
 1. A message queue is a FIFO data structure in kernel space that allows processes to send and receive messages asynchronously. Unlike pipes, message queues can be accessed by unrelated processes and support message prioritization.
 In this project:
 Drones are producers: they send telemetry and alert messages.
 The controller is the consumer: it reads messages in real-time via a telemetry thread.
 The queue ensures safe and orderly communication even if multiple drones send messages simultaneously.
-| Component                     | Role                                 | Function                                                |
-| ----------------------------- | ------------------------------------ | ------------------------------------------------------- |
-| Drone1, Drone2, Drone3        | Producers                            | Send telemetry/battery/alert messages using `mq_send()` |
-| Controller (Telemetry Thread) | Consumer                             | Reads messages using `mq_receive()` and logs them       |
-| Queue Name                    | `/drone_queue`                       | Shared IPC channel for all drones and controller        |
-| Message Structure             | `struct message { char text[100]; }` | Contains alert or telemetry information                 |
 
 2. Signals
 Signals are asynchronous notifications sent to processes to notify them of events like interrupts or termination requests.
 SIGINT (Ctrl + C): Sent by the user to the controller to initiate graceful shutdown.
 SIGTERM: Sent by the controller to terminate all drone processes safely.
-| Signal  | Sender     | Receiver   | Purpose                               |
-| ------- | ---------- | ---------- | ------------------------------------- |
-| SIGINT  | User       | Controller | Initiates system shutdown             |
-| SIGTERM | Controller | Drones     | Terminates drone processes gracefully |
 
-3. Semaphores (Optional / Drones)
+4. Semaphores (Optional / Drones)
 A semaphore is used to control access to shared resources, preventing race conditions in concurrent systems.
 In this project:
 /print_lock semaphore is used by drones to synchronize console output, so messages during battery recharge do not mix and remain readable.
