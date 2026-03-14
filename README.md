@@ -11,7 +11,7 @@ Each alert is printed on the console and logged into a file (log.txt) for later 
 If the user wants to stop the system, pressing Ctrl + C triggers a graceful shutdown: the controller safely terminates all drones, closes the message queue, and finalizes the log.
 
 ## Initial Block diagram
-![image alt]([image_url](https://github.com/nilayadesai/multi-drone-monitoring/blob/f058a2c55f374a13f824dfa686203336f2734a41/initial_block_diagram.png))
+![image alt]([image_url](https://github.com/nilayadesai/multi-drone-monitoring/blob/f058a2c55f374a13f824dfa686203336f2734a41/initial_block_diagram.png)
 
 ## System Architecture
 ![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/005e9349e12d632061f08d5facc98a1a7ca986ad/system_architecture.png)
@@ -28,17 +28,7 @@ Prints the message to console for monitoring
 Logs the message to log.txt for record keeping
 If Ctrl + C (SIGINT) is pressed, the Controller sends SIGTERM to all drones, closes the message queue, and exits safely.
 
-Drone Sensors / Simulation
-        ↓
-Drone Logic Processing
-        ↓
-Alert Message Generated
-        ↓
-POSIX Message Queue (/drone_queue)
-        ↓
-Controller Telemetry Thread
-        ↓
-Console Display + Log File Storage
+
 
 ## Process design
 
@@ -65,13 +55,7 @@ Here is the summary for Process design
 | Drone3     | Simulates intruder detection |
 
 Process creation:
-Controller
-   |
-   |----fork()----> Drone1
-   |
-   |----fork()----> Drone2
-   |
-   |----fork()----> Drone3
+
 
 Each drone is executed using: execl("./droneX","droneX",NULL)
 
@@ -90,13 +74,8 @@ Runs independently of the main controller process, so the main process can:
 Spawn drone processes
 Handle shutdown signals (SIGINT)
 Perform other controller tasks
-Controller Process
-     |
-     +--> Telemetry Thread
-             |
-             +--> Wait for messages from message queue
-             +--> Print to console
-             +--> Log to log.txt
+
+
              
   ## IPC (Inter-Process Communication) Mapping
 1. A message queue is a FIFO data structure in kernel space that allows processes to send and receive messages asynchronously. Unlike pipes, message queues can be accessed by unrelated processes and support message prioritization.
@@ -169,11 +148,14 @@ Use perror() to print descriptive error messages
 Call exit(1) on critical failures (e.g., controller cannot open queue)
 Example:
 mq = mq_open("/drone_queue", O_CREAT | O_RDONLY, 0666, &attr);
+
 if(mq == (mqd_t)-1) {
+
     perror("mq_open failed");
+    
     exit(1);
 }
-2. Process Creation Errors
+3. Process Creation Errors
 Scenario: fork() and execl() can fail due to:
 Insufficient system resources
 Invalid executable path
@@ -182,19 +164,23 @@ Check the return value of fork()
 In child process, check if execl() fails and call perror() + exit(1)
 Example:
 drone1_pid = fork();
+
 if(drone1_pid == 0) {
+
     execl("./drone1","drone1",NULL);
+    
     perror("exec failed");
+    
     exit(1);
 }
-3. Threading Errors
+4. Threading Errors
 Scenario: pthread_create() can fail if:
 System resources are exhausted
 Invalid thread attributes
 Handling Strategy:
 Check the return value of pthread_create()
 Print an error message and exit if thread creation fails
-4. File Handling Errors
+5. File Handling Errors
 Scenario: open(), write(), close() can fail if:
 File permissions are incorrect
 Disk is full
@@ -202,7 +188,7 @@ Handling Strategy:
 Check file descriptor returned by open()
 Check return value of write()
 Print errors using perror() and exit if necessary
-5. Signals and Safe Shutdown
+6. Signals and Safe Shutdown
 If any process receives SIGINT, the controller:
 Sends SIGTERM to all drones
 Waits for drones to exit (waitpid)
@@ -297,13 +283,19 @@ You can rerun the project multiple times; log.txt will append new messages each 
 
 ## Sample run output
 Controller started
+
 Drone1 started
+
 Drone2 started
+
 Drone3 started
 
 Drone1 position: (35, 40, 15)
+
 Drone2 captured the target
+
 Drone3: Intruder detected at (12,25,18)
+
 Drone1 battery low
 
 
