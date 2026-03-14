@@ -85,12 +85,13 @@ In this project:
 Drones are producers: they send telemetry and alert messages.
 The controller is the consumer: it reads messages in real-time via a telemetry thread.
 The queue ensures safe and orderly communication even if multiple drones send messages simultaneously.
-| Component                     | Role                                 | Function                                                 |
-| ----------------------------- | ------------------------------------ | -------------------------------------------------------- |
+| Component                     | Role                                 | Function                                                |
+| ----------------------------- | ------------------------------------ | ------------------------------------------------------- |
 | Drone1, Drone2, Drone3        | Producers                            | Send telemetry/battery/alert messages using `mq_send()` |
 | Controller (Telemetry Thread) | Consumer                             | Reads messages using `mq_receive()` and logs them       |
 | Queue Name                    | `/drone_queue`                       | Shared IPC channel for all drones and controller        |
 | Message Structure             | `struct message { char text[100]; }` | Contains alert or telemetry information                 |
+
 2. Signals
 Signals are asynchronous notifications sent to processes to notify them of events like interrupts or termination requests.
 SIGINT (Ctrl + C): Sent by the user to the controller to initiate graceful shutdown.
@@ -105,11 +106,10 @@ A semaphore is used to control access to shared resources, preventing race condi
 In this project:
 /print_lock semaphore is used by drones to synchronize console output, so messages during battery recharge do not mix and remain readable.
 
-4. File Handling (log.txt)
-In operating systems, file handling allows a program to store, read, or update data on persistent storage. Files are important because they retain data even after the program terminates. Proper file handling ensures data consistency, safety, and easy debugging.
 Controller startup:
 Opens log.txt (creates if it doesn’t exist) using open().
 Opens the POSIX message queue to receive messages from drones.
+
 Telemetry Thread:
 Reads messages from /drone_queue using mq_receive().
 Writes each message to log.txt using write().
