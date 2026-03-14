@@ -85,13 +85,12 @@ In this project:
 Drones are producers: they send telemetry and alert messages.
 The controller is the consumer: it reads messages in real-time via a telemetry thread.
 The queue ensures safe and orderly communication even if multiple drones send messages simultaneously.
-| Component                     | Role                                 | Function                                                |
-| ----------------------------- | ------------------------------------ | ------------------------------------------------------- |
+| Component                     | Role                                 | Function                                                 |
+| ----------------------------- | ------------------------------------ | -------------------------------------------------------- |
 | Drone1, Drone2, Drone3        | Producers                            | Send telemetry/battery/alert messages using `mq_send()` |
 | Controller (Telemetry Thread) | Consumer                             | Reads messages using `mq_receive()` and logs them       |
 | Queue Name                    | `/drone_queue`                       | Shared IPC channel for all drones and controller        |
 | Message Structure             | `struct message { char text[100]; }` | Contains alert or telemetry information                 |
-
 2. Signals
 Signals are asynchronous notifications sent to processes to notify them of events like interrupts or termination requests.
 SIGINT (Ctrl + C): Sent by the user to the controller to initiate graceful shutdown.
@@ -149,15 +148,17 @@ Check the return value of mq_open, mq_send, mq_receive
 Use perror() to print descriptive error messages
 Call exit(1) on critical failures (e.g., controller cannot open queue)
 Example:
-
-mq = mq_open("/drone_queue", O_CREAT | O_RDONLY, 0666, &attr);
+```c
+mq = mq_open("/drone_queue",
+             O_CREAT | O_RDONLY,
+             0666,
+             &attr);
 
 if(mq == (mqd_t)-1) {
-
     perror("mq_open failed");
-    
     exit(1);
 }
+```
 3. Process Creation Errors
 Scenario: fork() and execl() can fail due to:
 Insufficient system resources
@@ -166,16 +167,18 @@ Handling Strategy:
 Check the return value of fork()
 In child process, check if execl() fails and call perror() + exit(1)
 Example:
+```c
 drone1_pid = fork();
 
-if(drone1_pid == 0) {
+if (drone1_pid == 0) {
 
-    execl("./drone1","drone1",NULL);
+    execl("./drone1", "drone1", NULL);
     
     perror("exec failed");
     
     exit(1);
 }
+```
 4. Threading Errors
 Scenario: pthread_create() can fail if:
 System resources are exhausted
