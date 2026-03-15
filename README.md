@@ -26,6 +26,7 @@ The Controller runs a telemetry thread that reads all messages from the queue in
 The Controller then:
 Prints the message to console for monitoring
 Logs the message to log.txt for record keeping
+
 If Ctrl + C (SIGINT) is pressed, the Controller sends SIGTERM to all drones, closes the message queue, and exits safely.
 
 
@@ -44,6 +45,7 @@ Send alerts/messages via message queue (mq_send)
 Optionally, use semaphores to synchronize console output during battery recharge messages
 
 Inter-Process Communication
+
 Message Queue (/drone_queue): Drones → Controller
 Signals: Controller → Drones (SIGTERM) for shutdown
 File Handling: Controller writes messages to log.txt
@@ -59,7 +61,10 @@ Here is the summary for Process design
 Process creation:
 
 
-Each drone is executed using: execl("./droneX","droneX",NULL)
+Each drone is executed using:
+```c
+execl("./droneX","droneX",NULL);
+```
 
 ## Thread design
 In this project, the controller needs to constantly monitor messages from multiple drones while still being able to handle shutdown signals (SIGINT) and do other tasks.
@@ -87,12 +92,15 @@ The queue ensures safe and orderly communication even if multiple drones send me
 
 2. Signals
 Signals are asynchronous notifications sent to processes to notify them of events like interrupts or termination requests.
+
 SIGINT (Ctrl + C): Sent by the user to the controller to initiate graceful shutdown.
+
 SIGTERM: Sent by the controller to terminate all drone processes safely.
 
 4. Semaphores (Optional / Drones)
 A semaphore is used to control access to shared resources, preventing race conditions in concurrent systems.
 In this project:
+
 /print_lock semaphore is used by drones to synchronize console output, so messages during battery recharge do not mix and remain readable.
 
 Controller startup:
@@ -106,17 +114,7 @@ Ensures each message ends with a newline (\n) for readability.
 Controller Shutdown:
 Closes log.txt using close().
 Ensures all messages are saved before process termination.
-Drone1, Drone2, Drone3
-         |
-         V
-   /drone_queue
-         |
-         V
-Telemetry Thread
-         |
-         +--> Console (real-time alerts)
-         |
-         +--> log.txt (persistent storage)
+
 
 ## Error Handling Strategy
 
