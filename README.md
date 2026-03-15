@@ -95,17 +95,9 @@ The controller is the consumer: it reads messages in real-time via a telemetry t
 The queue ensures safe and orderly communication even if multiple drones send messages simultaneously.
 
 ### Signals
-Signals are asynchronous notifications sent to processes to notify them of events like interrupts or termination requests.
-
-SIGINT (Ctrl + C): Sent by the user to the controller to initiate graceful shutdown.
-
+Signals are asynchronous notifications sent to processes to notify them of events like interrupts or termination requests. 
+SIGINT (Ctrl + C): Sent by the user to the controller to initiate graceful shutdown. 
 SIGTERM: Sent by the controller to terminate all drone processes safely.
-
-### Semaphores (Optional / Drones)
-A semaphore is used to control access to shared resources, preventing race conditions in concurrent systems.
-In this project:
-
-/print_lock semaphore is used by drones to synchronize console output, so messages during battery recharge do not mix and remain readable.
 
 ### Controller startup:
 Opens log.txt (creates if it doesn’t exist) using open().
