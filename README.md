@@ -1,4 +1,4 @@
-# multi-drone-monitoring
+# Multi-drone-monitoring
 A real-time multi-drone monitoring and control system using POSIX message queues, threads, and signals in C.
 ## Scenario
 Imagine a central control station that monitors three drones flying in different zones of a restricted airspace. Each drone has a specific mission and constantly reports its status to the controller:
@@ -174,14 +174,6 @@ if (drone1_pid == 0) {
     exit(1);
 }
 ```
-### Threading Errors
-Scenario: pthread_create() can fail if:
-
-System resources are exhausted
-Invalid thread attributes
-Handling Strategy:
-Check the return value of pthread_create()
-Print an error message and exit if thread creation fails
 
 ### File Handling Errors
 Scenario: open(), write(), close() can fail if:
@@ -193,9 +185,19 @@ Handling Strategy:
 Check file descriptor returned by open()
 Check return value of write()
 Print errors using perror() and exit if necessary
+```c
+    fd = open("log.txt", O_CREAT | O_WRONLY | O_APPEND, 0666);
+
+    if(fd < 0)
+    {
+        perror("file open failed");
+        exit(1);
+    }
+```
 
 ### Signals and Safe Shutdown
 If any process receives SIGINT, the controller:
+
 Sends SIGTERM to all drones
 Waits for drones to exit (waitpid)
 Closes message queue (mq_close) and unlinks it (mq_unlink)
@@ -253,6 +255,7 @@ Drone3 started
 ## Observe Drone Telemetry
 The Telemetry Thread in the controller continuously receives messages from drones.
 Messages are displayed on the console in real-time, for example:
+
 Drone1 position: (35 40 15)
 
 Drone2 captured the target
@@ -263,6 +266,7 @@ Drone1 battery low
 
 ### Check Persistent Logs
 All messages are also written to log.txt in the project directory:
+
 Drone1 crossed its zone
 
 Drone2 captured the target
