@@ -29,8 +29,7 @@ Prints the message to console for monitoring<br>
 Logs the message to log.txt for record keeping<br>
 If Ctrl + C (SIGINT) is pressed, the Controller sends SIGTERM to all drones, closes the message queue, and exits safely.
 
-
-
+![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/6fc34773627b395ee511bb55313c5627e2412eba/Data%20flow%20and%20IPC%20mapping.PNG)
 ## Process design
 
 ### Controller Process
@@ -104,8 +103,6 @@ Signals are asynchronous notifications sent to processes to notify them of event
 ### Controller Shutdown:
 - Closes log.txt using close().
 - Ensures all messages are saved before process termination.
-
-![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/6fc34773627b395ee511bb55313c5627e2412eba/Data%20flow%20and%20IPC%20mapping.PNG)
 
 ## Error Handling Strategy
 
