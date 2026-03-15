@@ -191,7 +191,8 @@ This ensures no resources are left open and the system shuts down gracefully, ev
 Testing ensures that the multi-drone monitoring system behaves as expected under different scenarios. We focus on functional testing, integration testing, and system reliability.<br>
 - Functional Testing: Checks if each component works correctly (drones sending messages, controller receiving and logging).<br>
 - Integration Testing: Checks if all processes (drones + controller) work together seamlessly.<br>
-- System Testing: Checks if the system behaves correctly under real-world scenarios, e.g., low battery, intruder detection, shutdown.<br>
+- System Testing: Checks if the system behaves correctly under real-world scenarios, e.g., low battery, intruder detection, shutdown.
+
 | Step | Test Scenario                                            | Expected Outcome                                                       |
 | ---- | -------------------------------------------------------- | ---------------------------------------------------------------------- |
 | 1    | Start Controller alone                                   | Controller opens `log.txt` and message queue without errors            |
