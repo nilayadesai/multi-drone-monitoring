@@ -248,47 +248,34 @@ Drone3 started
 The Telemetry Thread in the controller continuously receives messages from drones.
 Messages are displayed on the console in real-time, for example:
 
-Drone1 position: (35 40 15)
-
-Drone2 captured the target
-
-Drone3: Intruder detected at (12,25,18)
-
+Drone1 position: (35 40 15) 
+Drone2 captured the target 
+Drone3: Intruder detected at (12,25,18) 
 Drone1 battery low
 
 ### Check Persistent Logs
 All messages are also written to log.txt in the project directory:
-
-Drone1 crossed its zone
-
-Drone2 captured the target
-
-Drone3: Intruder detected at (12,25,18)
-
+Drone1 crossed its zone 
+Drone2 captured the target 
+Drone3: Intruder detected at (12,25,18) 
 This allows post-run analysis and debugging.
 
 ### Graceful Shutdown
-To stop the system, press Ctrl + C in the terminal running the controller.
+To stop the system, press Ctrl + C in the terminal running the controller. 
+Controller handles SIGINT, and performs: 
+Sends SIGTERM to all drone processes 
+Waits for drones to exit (waitpid()) 
+Closes the message queue and log file 
 
-Controller handles SIGINT, and performs:
+Prints: 
+Shutdown signal received 
+controller shutdown complete 
 
-Sends SIGTERM to all drone processes
-
-Waits for drones to exit (waitpid())
-
-Closes the message queue and log file
-
-Prints:
-Shutdown signal received
-
-controller shutdown complete
 ### Notes
 
-Always run the controller first, as drones depend on the message queue created by it.
-
-Drones run automatically — no need to start them manually.
-
-You can rerun the project multiple times; log.txt will append new messages each time.
+Always run the controller first, as drones depend on the message queue created by it. 
+Drones run automatically — no need to start them manually. 
+You can rerun the project multiple times; log.txt will append new messages each time. 
 
 ## System Calls used
 | System Call / API  | Purpose                                                  | Used In                       | Why                                                            |
