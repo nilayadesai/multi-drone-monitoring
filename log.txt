@@ -1,0 +1,185 @@
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (11,40,27)
+
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (5,66,36)
+
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (31,62,48)
+
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (31,13,60)
+
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (36,49,72)
+
+Drone3: Intruder detected at (18,30,17)
+
+Drone3: Intruder detected at (33,49,49)
+
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (12,56,49)
+
+Drone3 battery low!!!
+
+Drone2 battery low
+
+Drone1 crossed its zone
+
+Drone1 battery low
+
+Drone3: Intruder detected at (18,43,17)
+
+Drone2 captured the target
+
+Drone3: Intruder detected at (11,42,15)
+
+Drone3: Intruder detected at (31,52,48)
+
+Drone battery recharged
+Drone3: Intruder detected at (56,19,47)
+
+Drone3: Intruder detected at (26,38,56)
+
+Drone2 battery low
+
+Drone battery recharged
+Drone3: Intruder detected at (3,15,42)
+
+Drone2 captured the target
+
+Drone3: Intruder detected at (1,47,5)
+
+Drone3: Intruder detected at (21,63,56)
+
+Drone1 battery recharged
+Drone3: Intruder detected at (11,57,46)
+
+Drone3 battery low!!!
+
+Drone3: Intruder detected at (55,46,18)
+
+Drone battery recharged
+Drone3: Intruder detected at (27,66,70)
+
+Drone3: Intruder detected at (5,18,2)
+
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (11,5,32)
+
+Drone1 crossed its zone
+
+Drone battery recharged
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (38,35,67)
+
+Drone3: Intruder detected at (6,61,8)
+
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (35,20,51)
+
+Drone3 battery low!!!
+
+Drone3: Intruder detected at (6,21,26)
+
+Drone1 crossed its zone
+
+Drone2 battery low
+
+Drone1 crossed its zone
+
+Drone battery recharged
+Drone1 battery low
+
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (12,8,29)
+
+Drone3: Intruder detected at (32,27,74)
+
+Drone1 crossed its zone
+
+Drone battery recharged
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (22,37,69)
+
+Drone3: Intruder detected at (48,27,29)
+
+Drone2 battery low
+
+Drone3: Intruder detected at (59,51,3)
+
+Drone1 battery recharged
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (14,19,55)
+
+Drone3 battery low!!!
+
+Drone3: Intruder detected at (29,40,71)
+
+Drone battery recharged
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (30,36,41)
+
+Drone3: Intruder detected at (19,60,4)
+
+Drone1 crossed its zone
+
+Drone1 crossed its zone
+
+Drone battery recharged
+Drone1 crossed its zone
+
+Drone1 battery low
+
+Drone3: Intruder detected at (38,31,33)
+
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (32,28,42)
+
+Drone3: Intruder detected at (60,42,10)
+
+Drone1 crossed its zone
+
+Drone3 battery low!!!
+
+Drone1 battery recharged
+Drone3: Intruder detected at (60,25,74)
+
+Drone3: Intruder detected at (41,30,3)
+
+Drone3: Intruder detected at (38,7,39)
+
+Drone2 battery low
+
+Drone1 crossed its zone
+
+Drone1 crossed its zone
+
+Drone battery recharged
+Drone1 crossed its zone
+
+Drone1 battery low
+
+Drone1 crossed its zone
+
+Drone3: Intruder detected at (59,38,72)
+
+Drone1 crossed its zone
+
+Drone battery recharged
+Drone1 crossed its zone
+
