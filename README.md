@@ -17,19 +17,17 @@ If the user wants to stop the system, pressing Ctrl + C triggers a graceful shut
 ![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/005e9349e12d632061f08d5facc98a1a7ca986ad/system_architecture.png)
 
 ## High-Level Data flow
-Each drone (Drone1, Drone2, Drone3) generates telemetry or alert messages:
-Drone1: position and battery alerts
-
-Drone2:  target capture and battery alerts
-
-Drone3: intruder detection and battery alerts
+Each drone (Drone1, Drone2, Drone3) generates telemetry or alert messages:<br>
+Drone1: position and battery alerts<br>
+<br>
+Drone2:  target capture and battery alerts<br>
+Drone3: intruder detection and battery alerts<br>
 
 Drones send messages via POSIX message queue (/drone_queue).
 The Controller runs a telemetry thread that reads all messages from the queue in real-time.
-The Controller then:
+The Controller then:<br>
 Prints the message to console for monitoring
-Logs the message to log.txt for record keeping
-
+Logs the message to log.txt for record keeping<br>
 If Ctrl + C (SIGINT) is pressed, the Controller sends SIGTERM to all drones, closes the message queue, and exits safely.
 
 
@@ -73,23 +71,20 @@ Telemetry Thread
 Created in controller.c using pthread_create().
 Function: Continuously read messages from the POSIX message queue (/drone_queue).
 
-### Tasks it performs:
-Receive message from a drone (mq_receive)
+### Tasks it performs:<br>
+Receive message from a drone (mq_receive)<br>
+Print message on the console<br>
+Write message into log.txt for record keeping<br>
 
-Print message on the console
-
-Write message into log.txt for record keeping
-
-Runs independently of the main controller process, so the main process can:
-Spawn drone processes
-Handle shutdown signals (SIGINT)
-Perform other controller tasks
+Runs independently of the main controller process, so the main process can:<br>
+Spawn drone processes<br>
+Handle shutdown signals (SIGINT)<br>
+Perform other controller tasks<br>
 
   ## IPC (Inter-Process Communication) Mapping
   A message queue is a FIFO data structure in kernel space that allows processes to send and receive messages asynchronously. Unlike pipes, message queues can be accessed by unrelated processes and support message prioritization.
   
-In this project:
-
+In this project:<br>
 Drones are producers: they send telemetry and alert messages.
 The controller is the consumer: it reads messages in real-time via a telemetry thread.
 The queue ensures safe and orderly communication even if multiple drones send messages simultaneously.
@@ -117,22 +112,22 @@ Ensures all messages are saved before process termination.
 ## Error Handling Strategy
 
 In any real-time system, errors can happen due to system failures, resource unavailability, or invalid operations. Proper error handling ensures that the system doesn’t crash unexpectedly and provides informative messages for debugging.
-In this project, we follow a structured error handling approach for:
-Message Queues
-Process Creation
-Threading
-File Operations
-Other System Calls
-### 1. Message Queue Errors
-Scenario: mq_open, mq_send, mq_receive can fail due to:
-Queue already exists or doesn’t exist
-Permission issues
-Queue full or empty
+In this project, we follow a structured error handling approach for:<br>
+Message Queues<br>
+Process Creation<br>
+Threading<br>
+File Operations<br>
+Other System Calls<br>
+### Message Queue Errors
+Scenario: mq_open, mq_send, mq_receive can fail due to:<br>
+Queue already exists or doesn’t exist<br>
+Permission issues<br>
+Queue full or empty<br>
 
-Handling Strategy:
-Check the return value of mq_open, mq_send, mq_receive
-Use perror() to print descriptive error messages
-Call exit(1) on critical failures (e.g., controller cannot open queue)
+Handling Strategy:<br>
+Check the return value of mq_open, mq_send, mq_receive<br>
+Use perror() to print descriptive error messages<br>
+Call exit(1) on critical failures (e.g., controller cannot open queue)<br>
 Example:
 ```c
 mq = mq_open("/drone_queue",
@@ -146,13 +141,13 @@ if(mq == (mqd_t)-1) {
 }
 ```
 ### Process Creation Errors
-Scenario: fork() and execl() can fail due to:
-Insufficient system resources
-Invalid executable path
+Scenario: fork() and execl() can fail due to:<br>
+Insufficient system resources<br>
+Invalid executable path<br>
 
-Handling Strategy:
-Check the return value of fork()
-In child process, check if execl() fails and call perror() + exit(1)
+Handling Strategy:<br>
+Check the return value of fork()<br>
+In child process, check if execl() fails and call perror() + exit(1)<br>
 Example:
 ```c
 drone1_pid = fork();
@@ -168,15 +163,14 @@ if (drone1_pid == 0) {
 ```
 
 ### File Handling Errors
-Scenario: open(), write(), close() can fail if:
-
-File permissions are incorrect
-Disk is full
+Scenario: open(), write(), close() can fail if:<br>
+File permissions are incorrect<br>
+Disk is full<br>
 
 Handling Strategy:
-Check file descriptor returned by open()
-Check return value of write()
-Print errors using perror() and exit if necessary
+Check file descriptor returned by open()<br>
+Check return value of write()<br>
+Print errors using perror() and exit if necessary<br>
 ```c
     fd = open("log.txt", O_CREAT | O_WRONLY | O_APPEND, 0666);
 
@@ -190,17 +184,17 @@ Print errors using perror() and exit if necessary
 ### Signals and Safe Shutdown
 If any process receives SIGINT, the controller:
 
-Sends SIGTERM to all drones
-Waits for drones to exit (waitpid)
-Closes message queue (mq_close) and unlinks it (mq_unlink)
-Closes log file
-This ensures no resources are left open and the system shuts down gracefully, even if an error occurs.
+Sends SIGTERM to all drones<br>
+Waits for drones to exit (waitpid)<br>
+Closes message queue (mq_close) and unlinks it (mq_unlink)<br>
+Closes log file<br>
+This ensures no resources are left open and the system shuts down gracefully, even if an error occurs.<br>
 
 ## Testing Approach
-Testing ensures that the multi-drone monitoring system behaves as expected under different scenarios. We focus on functional testing, integration testing, and system reliability.
-Functional Testing: Checks if each component works correctly (drones sending messages, controller receiving and logging).
-Integration Testing: Checks if all processes (drones + controller) work together seamlessly.
-System Testing: Checks if the system behaves correctly under real-world scenarios, e.g., low battery, intruder detection, shutdown.
+Testing ensures that the multi-drone monitoring system behaves as expected under different scenarios. We focus on functional testing, integration testing, and system reliability.<br>
+Functional Testing: Checks if each component works correctly (drones sending messages, controller receiving and logging).<br>
+Integration Testing: Checks if all processes (drones + controller) work together seamlessly.<br>
+System Testing: Checks if the system behaves correctly under real-world scenarios, e.g., low battery, intruder detection, shutdown.<br>
 | Step | Test Scenario                                            | Expected Outcome                                                       |
 | ---- | -------------------------------------------------------- | ---------------------------------------------------------------------- |
 | 1    | Start Controller alone                                   | Controller opens `log.txt` and message queue without errors            |
@@ -233,16 +227,12 @@ or
 ./controller
 ```
 
-The controller automatically launches all three drones as separate processes.
-You will see messages like:
-
-Controller started
-
-Drone1 started
-
-Drone2 started
-
-Drone3 started
+The controller automatically launches all three drones as separate processes.<br>
+You will see messages like:<br>
+Controller started<br>
+Drone1 started<br>
+Drone2 started<br>
+Drone3 started<br>
 
 ## Observe Drone Telemetry
 The Telemetry Thread in the controller continuously receives messages from drones.<br>
@@ -254,28 +244,28 @@ Drone3: Intruder detected at (12,25,18)<br>
 Drone1 battery low<br>
 
 ### Check Persistent Logs
-All messages are also written to log.txt in the project directory:
-Drone1 crossed its zone 
-Drone2 captured the target 
-Drone3: Intruder detected at (12,25,18) 
-This allows post-run analysis and debugging.
+All messages are also written to log.txt in the project directory:<br>
+Drone1 crossed its zone <br>
+Drone2 captured the target <br>
+Drone3: Intruder detected at (12,25,18) <br>
+This allows post-run analysis and debugging.<br>
 
 ### Graceful Shutdown
-To stop the system, press Ctrl + C in the terminal running the controller. 
-Controller handles SIGINT, and performs: 
-Sends SIGTERM to all drone processes 
-Waits for drones to exit (waitpid()) 
-Closes the message queue and log file 
+To stop the system, press Ctrl + C in the terminal running the controller. <br>
+Controller handles SIGINT, and performs: <br>
+Sends SIGTERM to all drone processes <br>
+Waits for drones to exit (waitpid()) <br>
+Closes the message queue and log file <br>
 
 Prints: 
-Shutdown signal received 
-controller shutdown complete 
+Shutdown signal received <br>
+controller shutdown complete <br>
 
 ### Notes
 
-Always run the controller first, as drones depend on the message queue created by it. 
-Drones run automatically — no need to start them manually. 
-You can rerun the project multiple times; log.txt will append new messages each time. 
+Always run the controller first, as drones depend on the message queue created by it. <br>
+Drones run automatically — no need to start them manually. <br>
+You can rerun the project multiple times; log.txt will append new messages each time. <br>
 
 ## System Calls used
 | System Call / API  | Purpose                                                  | Used In                       | Why                                                            |
