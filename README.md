@@ -115,7 +115,7 @@ Controller Shutdown:
 Closes log.txt using close().
 Ensures all messages are saved before process termination.
 
-
+![image alt]()
 ## Error Handling Strategy
 
 In any real-time system, errors can happen due to system failures, resource unavailability, or invalid operations. Proper error handling ensures that the system doesn’t crash unexpectedly and provides informative messages for debugging.
