@@ -71,13 +71,13 @@ Created in controller.c using pthread_create().
 Function: Continuously read messages from the POSIX message queue (/drone_queue).
 
 ### Tasks it performs:<br>
-- Receive message from a drone (mq_receive)<br>
-- Print message on the console<br>
-- Write message into log.txt for record keeping<br>
-- Runs independently of the main controller process, so the main process can:<br>
-- Spawn drone processes<br>
-- Handle shutdown signals (SIGINT)<br>
-- Perform other controller tasks<br>
+- Receive message from a drone (mq_receive)
+- Print message on the console
+- Write message into log.txt for record keeping
+- Runs independently of the main controller process, so the main process can:
+- Spawn drone processes
+- Handle shutdown signals (SIGINT)
+- Perform other controller tasks
 
   ## IPC (Inter-Process Communication) Mapping
 A message queue is a FIFO data structure in kernel space that allows processes to send and receive messages asynchronously. Unlike pipes, message queues can be accessed by unrelated processes and support message prioritization.
