@@ -14,7 +14,7 @@ If the user wants to stop the system, pressing Ctrl + C triggers a graceful shut
 ![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/b85161cb1ed7faedbafbffc52b8cb204016d95c0/block_diagram.PNG)
 
 ## System Architecture
-![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/005e9349e12d632061f08d5facc98a1a7ca986ad/system_architecture.png)
+![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/11fc1946f6ee4c826213b0536f1dfa6fa6e50df5/system_architecute.PNG)
 
 ## High-Level Data flow
 Each drone (Drone1, Drone2, Drone3) generates telemetry or alert messages:<br>
