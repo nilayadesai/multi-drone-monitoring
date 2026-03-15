@@ -214,12 +214,12 @@ System Testing: Checks if the system behaves correctly under real-world scenario
 
 ## Testing Notes:
 
-Randomization: Drones use rand() for position and intruder detection, simulating different real-world conditions.
-Logs Verification: After system runs, log.txt can be reviewed to ensure all messages are captured accurately.
+Randomization: Drones use rand() for position and intruder detection, simulating different real-world conditions.<br>
+Logs Verification: After system runs, log.txt can be reviewed to ensure all messages are captured accurately.<br>
 Edge Cases: Test battery reaching 0, drone crossing zone limits, and multiple drones sending alerts at the same time.
 
 ## Build Instructions
- Make sure the project is built
+Make sure the project is built
 Compile the project:
    ```c
    make
@@ -245,13 +245,13 @@ Drone2 started
 Drone3 started
 
 ## Observe Drone Telemetry
-The Telemetry Thread in the controller continuously receives messages from drones.
-Messages are displayed on the console in real-time, for example:
+The Telemetry Thread in the controller continuously receives messages from drones.<br>
+Messages are displayed on the console in real-time, for example:<br>
 
-Drone1 position: (35 40 15) 
-Drone2 captured the target 
-Drone3: Intruder detected at (12,25,18) 
-Drone1 battery low
+Drone1 position: (35 40 15) <br>
+Drone2 captured the target <br>
+Drone3: Intruder detected at (12,25,18)<br> 
+Drone1 battery low<br>
 
 ### Check Persistent Logs
 All messages are also written to log.txt in the project directory:
