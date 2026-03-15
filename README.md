@@ -11,7 +11,7 @@ Each alert is printed on the console and logged into a file (log.txt) for later 
 If the user wants to stop the system, pressing Ctrl + C triggers a graceful shutdown: the controller safely terminates all drones, closes the message queue, and finalizes the log.
 
 ## Initial Block diagram
-![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/f058a2c55f374a13f824dfa686203336f2734a41/initial_block_diagram.png)
+![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/b85161cb1ed7faedbafbffc52b8cb204016d95c0/block_diagram.PNG)
 
 ## System Architecture
 ![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/005e9349e12d632061f08d5facc98a1a7ca986ad/system_architecture.png)
