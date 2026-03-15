@@ -115,7 +115,8 @@ Controller Shutdown:
 Closes log.txt using close().
 Ensures all messages are saved before process termination.
 
-![image alt]()
+![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/6fc34773627b395ee511bb55313c5627e2412eba/Data%20flow%20and%20IPC%20mapping.PNG)
+
 ## Error Handling Strategy
 
 In any real-time system, errors can happen due to system failures, resource unavailability, or invalid operations. Proper error handling ensures that the system doesn’t crash unexpectedly and provides informative messages for debugging.
@@ -168,20 +169,25 @@ if (drone1_pid == 0) {
 ```
 4. Threading Errors
 Scenario: pthread_create() can fail if:
+
 System resources are exhausted
 Invalid thread attributes
 Handling Strategy:
 Check the return value of pthread_create()
 Print an error message and exit if thread creation fails
-5. File Handling Errors
+
+6. File Handling Errors
 Scenario: open(), write(), close() can fail if:
+
 File permissions are incorrect
 Disk is full
+
 Handling Strategy:
 Check file descriptor returned by open()
 Check return value of write()
 Print errors using perror() and exit if necessary
-6. Signals and Safe Shutdown
+
+8. Signals and Safe Shutdown
 If any process receives SIGINT, the controller:
 Sends SIGTERM to all drones
 Waits for drones to exit (waitpid)
@@ -205,52 +211,80 @@ System Testing: Checks if the system behaves correctly under real-world scenario
 | 7    | Attempt message queue after shutdown                     | Should fail, indicating queue is properly unlinked                     |
 | 8    | Simultaneous messages from multiple drones               | Messages received in order without data loss                           |
 
-Testing Notes
+## Testing Notes:
+
 Randomization: Drones use rand() for position and intruder detection, simulating different real-world conditions.
 Logs Verification: After system runs, log.txt can be reviewed to ensure all messages are captured accurately.
 Edge Cases: Test battery reaching 0, drone crossing zone limits, and multiple drones sending alerts at the same time.
 
-## Run Instructions
-1. Make sure the project is built
-Follow the Build Steps first (make all)
-This ensures all executables are ready: controller, drone1, drone2, drone3
-2. Start the Controller
-Run the controller executable:
+## Build Instructions
+ Make sure the project is built
+Compile the project:
+   ```c
+   make
+   ```
+## Run the System
+```c
+ make run
+```
+or
+```c
 ./controller
+```
+
 The controller automatically launches all three drones as separate processes.
 You will see messages like:
+
 Controller started
+
 Drone1 started
+
 Drone2 started
+
 Drone3 started
 
 3. Observe Drone Telemetry
 The Telemetry Thread in the controller continuously receives messages from drones.
 Messages are displayed on the console in real-time, for example:
 Drone1 position: (35 40 15)
+
 Drone2 captured the target
+
 Drone3: Intruder detected at (12,25,18)
+
 Drone1 battery low
 
 5. Check Persistent Logs
 All messages are also written to log.txt in the project directory:
 Drone1 crossed its zone
+
 Drone2 captured the target
+
 Drone3: Intruder detected at (12,25,18)
+
 This allows post-run analysis and debugging.
 
 5. Graceful Shutdown
 To stop the system, press Ctrl + C in the terminal running the controller.
+
 Controller handles SIGINT, and performs:
+
 Sends SIGTERM to all drone processes
+
 Waits for drones to exit (waitpid())
+
 Closes the message queue and log file
+
 Prints:
 Shutdown signal received
+
 controller shutdown complete
-6. Notes
+7. Notes
+
 Always run the controller first, as drones depend on the message queue created by it.
+
 Drones run automatically — no need to start them manually.
+
 You can rerun the project multiple times; log.txt will append new messages each time.
 
 ## System Calls used
