@@ -18,9 +18,12 @@ If the user wants to stop the system, pressing Ctrl + C triggers a graceful shut
 
 ## High-Level Data flow
 Each drone (Drone1, Drone2, Drone3) generates telemetry or alert messages:
-Drone1 → position and battery alerts
-Drone2 → target capture and battery alerts
-Drone3 → intruder detection and battery alerts
+Drone1: position and battery alerts
+
+Drone2:  target capture and battery alerts
+
+Drone3: intruder detection and battery alerts
+
 Drones send messages via POSIX message queue (/drone_queue).
 The Controller runs a telemetry thread that reads all messages from the queue in real-time.
 The Controller then:
@@ -33,23 +36,19 @@ If Ctrl + C (SIGINT) is pressed, the Controller sends SIGTERM to all drones, clo
 
 ## Process design
 
-Controller Process
+### Controller Process
 Creates three child processes for Drone1, Drone2, Drone3 using fork()
 Starts a telemetry thread (pthread_create) to read messages from the message queue
 Handles SIGINT to shutdown drones and cleanup resources
-Drone Processes
+### Drone Processes
 Each drone is a separate process running its own logic:
 Generate telemetry (position, target, or intruder detection)
 Monitor battery levels
 Send alerts/messages via message queue (mq_send)
 Optionally, use semaphores to synchronize console output during battery recharge messages
 
-Inter-Process Communication
+### Inter-Process Communication
 
-Message Queue (/drone_queue): Drones → Controller
-Signals: Controller → Drones (SIGTERM) for shutdown
-File Handling: Controller writes messages to log.txt
-Here is the summary for Process design 
 
 | Process    | Role                         |
 | ---------- | ---------------------------- |
@@ -58,7 +57,7 @@ Here is the summary for Process design
 | Drone2     | Simulates target capture     |
 | Drone3     | Simulates intruder detection |
 
-Process creation:
+### Process creation:
 
 
 Each drone is executed using:
@@ -66,7 +65,7 @@ Each drone is executed using:
 execl("./droneX","droneX",NULL);
 ```
 
-## Thread design
+### Thread design
 In this project, the controller needs to constantly monitor messages from multiple drones while still being able to handle shutdown signals (SIGINT) and do other tasks.
 If we didn’t use threads, the controller would block while waiting for messages, and it wouldn’t respond to shutdown signals properly.
 Using a telemetry thread allows concurrent message handling, making the system real-time and responsive.
@@ -74,44 +73,50 @@ Telemetry Thread
 Created in controller.c using pthread_create().
 Function: Continuously read messages from the POSIX message queue (/drone_queue).
 
-Tasks it performs:
+### Tasks it performs:
 Receive message from a drone (mq_receive)
+
 Print message on the console
+
 Write message into log.txt for record keeping
+
 Runs independently of the main controller process, so the main process can:
 Spawn drone processes
 Handle shutdown signals (SIGINT)
 Perform other controller tasks
 
   ## IPC (Inter-Process Communication) Mapping
-1. A message queue is a FIFO data structure in kernel space that allows processes to send and receive messages asynchronously. Unlike pipes, message queues can be accessed by unrelated processes and support message prioritization.
+  A message queue is a FIFO data structure in kernel space that allows processes to send and receive messages asynchronously. Unlike pipes, message queues can be accessed by unrelated processes and support message prioritization.
+  
 In this project:
+
 Drones are producers: they send telemetry and alert messages.
 The controller is the consumer: it reads messages in real-time via a telemetry thread.
 The queue ensures safe and orderly communication even if multiple drones send messages simultaneously.
 
-2. Signals
+### Signals
 Signals are asynchronous notifications sent to processes to notify them of events like interrupts or termination requests.
 
 SIGINT (Ctrl + C): Sent by the user to the controller to initiate graceful shutdown.
 
 SIGTERM: Sent by the controller to terminate all drone processes safely.
 
-4. Semaphores (Optional / Drones)
+### Semaphores (Optional / Drones)
 A semaphore is used to control access to shared resources, preventing race conditions in concurrent systems.
 In this project:
 
 /print_lock semaphore is used by drones to synchronize console output, so messages during battery recharge do not mix and remain readable.
 
-Controller startup:
+### Controller startup:
 Opens log.txt (creates if it doesn’t exist) using open().
 Opens the POSIX message queue to receive messages from drones.
 
-Telemetry Thread:
+### Telemetry Thread:
 Reads messages from /drone_queue using mq_receive().
 Writes each message to log.txt using write().
 Ensures each message ends with a newline (\n) for readability.
-Controller Shutdown:
+
+### Controller Shutdown:
 Closes log.txt using close().
 Ensures all messages are saved before process termination.
 
@@ -126,11 +131,12 @@ Process Creation
 Threading
 File Operations
 Other System Calls
-1. Message Queue Errors
+### 1. Message Queue Errors
 Scenario: mq_open, mq_send, mq_receive can fail due to:
 Queue already exists or doesn’t exist
 Permission issues
 Queue full or empty
+
 Handling Strategy:
 Check the return value of mq_open, mq_send, mq_receive
 Use perror() to print descriptive error messages
@@ -147,10 +153,11 @@ if(mq == (mqd_t)-1) {
     exit(1);
 }
 ```
-3. Process Creation Errors
+### Process Creation Errors
 Scenario: fork() and execl() can fail due to:
 Insufficient system resources
 Invalid executable path
+
 Handling Strategy:
 Check the return value of fork()
 In child process, check if execl() fails and call perror() + exit(1)
@@ -167,7 +174,7 @@ if (drone1_pid == 0) {
     exit(1);
 }
 ```
-4. Threading Errors
+### Threading Errors
 Scenario: pthread_create() can fail if:
 
 System resources are exhausted
@@ -176,7 +183,7 @@ Handling Strategy:
 Check the return value of pthread_create()
 Print an error message and exit if thread creation fails
 
-6. File Handling Errors
+### File Handling Errors
 Scenario: open(), write(), close() can fail if:
 
 File permissions are incorrect
@@ -187,7 +194,7 @@ Check file descriptor returned by open()
 Check return value of write()
 Print errors using perror() and exit if necessary
 
-8. Signals and Safe Shutdown
+### Signals and Safe Shutdown
 If any process receives SIGINT, the controller:
 Sends SIGTERM to all drones
 Waits for drones to exit (waitpid)
@@ -243,7 +250,7 @@ Drone2 started
 
 Drone3 started
 
-3. Observe Drone Telemetry
+## Observe Drone Telemetry
 The Telemetry Thread in the controller continuously receives messages from drones.
 Messages are displayed on the console in real-time, for example:
 Drone1 position: (35 40 15)
@@ -254,7 +261,7 @@ Drone3: Intruder detected at (12,25,18)
 
 Drone1 battery low
 
-5. Check Persistent Logs
+### Check Persistent Logs
 All messages are also written to log.txt in the project directory:
 Drone1 crossed its zone
 
@@ -264,7 +271,7 @@ Drone3: Intruder detected at (12,25,18)
 
 This allows post-run analysis and debugging.
 
-5. Graceful Shutdown
+### Graceful Shutdown
 To stop the system, press Ctrl + C in the terminal running the controller.
 
 Controller handles SIGINT, and performs:
@@ -279,7 +286,7 @@ Prints:
 Shutdown signal received
 
 controller shutdown complete
-7. Notes
+### Notes
 
 Always run the controller first, as drones depend on the message queue created by it.
 
