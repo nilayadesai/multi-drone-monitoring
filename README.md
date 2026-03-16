@@ -284,21 +284,12 @@ controller shutdown complete <br>
 | `perror()`         | Prints descriptive error messages based on `errno`       | Controller & Drones           | For error handling when system calls fail                      |
 
 ## Sample run output
-Controller started
+![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/fcab7af3219f97e6629df9b4fa6eae0a637ec4fe/controller.png)
+![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/fcab7af3219f97e6629df9b4fa6eae0a637ec4fe/drone1.png)
+![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/fcab7af3219f97e6629df9b4fa6eae0a637ec4fe/drone2.png
+)
+![image alt](https://github.com/nilayadesai/multi-drone-monitoring/blob/fcab7af3219f97e6629df9b4fa6eae0a637ec4fe/drone3.png)
 
-Drone1 started
-
-Drone2 started
-
-Drone3 started
-
-Drone1 position: (35, 40, 15)
-
-Drone2 captured the target
-
-Drone3: Intruder detected at (12,25,18)
-
-Drone1 battery low
 
 
 
